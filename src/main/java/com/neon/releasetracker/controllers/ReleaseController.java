@@ -22,17 +22,17 @@ public class ReleaseController {
     private StatusValidator statusValidator;
 
     @GetMapping(value = "/releases")
-    public ResponseEntity<List<Release>> getAllReleases() {
+    public ResponseEntity<List<Release>> getAllReleases() throws CustomException {
         return new ResponseEntity(releaseService.getAllReleases(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/releases/{id}")
-    public ResponseEntity<Release> getRelease(@PathVariable Integer id) {
+    public ResponseEntity<Release> getRelease(@PathVariable Integer id) throws CustomException {
         return new ResponseEntity(releaseService.getRelease(id), HttpStatus.OK);
     }
 
     @GetMapping(value = "/release")
-    public ResponseEntity<Release> getReleaseRequestParam(@RequestParam Integer id) {
+    public ResponseEntity<Release> getReleaseRequestParam(@RequestParam Integer id) throws CustomException {
         return new ResponseEntity(releaseService.getRelease(id), HttpStatus.OK);
     }
 

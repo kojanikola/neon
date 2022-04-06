@@ -1,5 +1,6 @@
 package com.neon.releasetracker.services;
 
+import com.neon.releasetracker.exceptions.CustomException;
 import com.neon.releasetracker.models.Release;
 import com.neon.releasetracker.repositories.ReleaseRepository;
 import lombok.*;
@@ -21,11 +22,11 @@ public class ReleaseService {
         return releaseRepository.newRelease(release);
     }
 
-    public List<Release> getAllReleases() {
+    public List<Release> getAllReleases() throws CustomException {
         return releaseRepository.getAllReleases();
     }
 
-    public Release getRelease(Integer id) {
+    public Release getRelease(Integer id) throws CustomException {
         return releaseRepository.getRelease(id);
     }
 

@@ -1,24 +1,24 @@
-CREATE TABLE IF NOT EXISTS `neon`.`statuses` (
+CREATE TABLE IF NOT EXISTS `statuses` (
   `value` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`value`)
 );
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('Created');
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('In Development');
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('On DEV');
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('QA Done on DEV');
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('On staging');
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('QA done on STAGING');
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('On PROD');
-INSERT IGNORE INTO `neon`.`statuses`
+INSERT INTO `statuses`
   VALUES('Done');
-CREATE TABLE IF NOT EXISTS `neon`.`releases` (
+CREATE TABLE IF NOT EXISTS `releases` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `description` VARCHAR(45) NOT NULL,

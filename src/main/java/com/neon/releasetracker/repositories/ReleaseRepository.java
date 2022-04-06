@@ -1,9 +1,12 @@
 package com.neon.releasetracker.repositories;
 
+import com.neon.releasetracker.exceptions.CustomException;
 import com.neon.releasetracker.models.Release;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -40,7 +43,7 @@ public class ReleaseRepository {
                 return ps;
             }, keyHolder);
 
-            log.info(""+ keyHolder.getKeys().get("GENERATED_KEY"));
+            log.info("" + keyHolder.getKeys().get("GENERATED_KEY"));
 
             release.setId(keyHolder.getKey().intValue());
 
@@ -52,37 +55,45 @@ public class ReleaseRepository {
         }
     }
 
-    public List<Release> getAllReleases() {
+    public List<Release> getAllReleases() throws CustomException {
+        try {
+            String query = "SELECT * FROM `releases`;";
 
-        String query = "SELECT * FROM `releases`;";
-
-        return jdbcTemplate.query(query, (rs, rowNum) -> {
-            Release release = new Release();
-            release.setId(rs.getInt("id"));
-            release.setName(rs.getString("name"));
-            release.setDescription(rs.getString("description"));
-            release.setCreatedAt(rs.getTimestamp("createdAt"));
-            release.setReleaseDate(rs.getDate("releaseDate"));
-            release.setStatus(rs.getString("status"));
-            release.setLastUpdatedAt(rs.getTimestamp("lastUpdatedAt"));
-            return release;
-        });
+            return jdbcTemplate.query(query, (rs, rowNum) -> {
+                Release release = new Release();
+                release.setId(rs.getInt("id"));
+                release.setName(rs.getString("name"));
+                release.setDescription(rs.getString("description"));
+                release.setCreatedAt(rs.getTimestamp("createdAt"));
+                release.setReleaseDate(rs.getDate("releaseDate"));
+                release.setStatus(rs.getString("status"));
+                release.setLastUpdatedAt(rs.getTimestamp("lastUpdatedAt"));
+                return release;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomException(HttpStatus.NOT_FOUND, "Currently no data in database.");
+        }
     }
 
-    public Release getRelease(Integer id) {
-        String query = "SELECT * FROM `releases` where `id`=?";
+    public Release getRelease(Integer id) throws CustomException {
+        try {
+            String query = "SELECT * FROM `releases` where `id`=?";
 
-        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
-            Release release = new Release();
-            release.setId(rs.getInt("id"));
-            release.setName(rs.getString("name"));
-            release.setDescription(rs.getString("description"));
-            release.setCreatedAt(rs.getTimestamp("createdAt"));
-            release.setReleaseDate(rs.getDate("releaseDate"));
-            release.setStatus(rs.getString("status"));
-            release.setLastUpdatedAt(rs.getTimestamp("lastUpdatedAt"));
-            return release;
-        },id);
+            return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
+                Release release = new Release();
+                release.setId(rs.getInt("id"));
+                release.setName(rs.getString("name"));
+                release.setDescription(rs.getString("description"));
+                release.setCreatedAt(rs.getTimestamp("createdAt"));
+                release.setReleaseDate(rs.getDate("releaseDate"));
+                release.setStatus(rs.getString("status"));
+                release.setLastUpdatedAt(rs.getTimestamp("lastUpdatedAt"));
+                return release;
+            }, id);
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomException(HttpStatus.NOT_FOUND, "Release doesn't exists");
+        }
     }
 
     public Release updateRelease(Integer id, Release release) {
@@ -97,15 +108,18 @@ public class ReleaseRepository {
                 "`lastUpdatedAt` = ?\n" +
                 "WHERE `id` = ?;";
 
-        try{
+        try {
 
             jdbcTemplate.update(query, release.getName(), release.getDescription(), release.getStatus(),
                     release.getReleaseDate(), release.getCreatedAt(), release.getLastUpdatedAt(), release.getId());
 
             return this.getRelease(id);
 
-        }catch(DataAccessException e){
+        } catch (DataAccessException e) {
             log.error(e.getMessage());
+            return null;
+        } catch (CustomException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -115,10 +129,10 @@ public class ReleaseRepository {
         String query = "DELETE FROM `releases`\n" +
                 "WHERE `id`=?";
 
-        try{
+        try {
             jdbcTemplate.update(query, id);
             return "successful";
-        }catch(DataAccessException e ){
+        } catch (DataAccessException e) {
             log.error(e.getMessage());
             return "unsuccessful";
         }

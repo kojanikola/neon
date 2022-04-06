@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Table(name = "releasesORM", schema = "neon")
+@Table(name = "releasesORM")
 public class ReleaseORM {
 
     @Id
