@@ -96,31 +96,27 @@ public class ReleaseRepository {
         }
     }
 
-    public Release updateRelease(Integer id, Release release) {
+    public Release updateRelease(Integer id, Release release) throws CustomException {
 
-        String query = "UPDATE `releases`\n" +
+        String query = "UPDATE releases\n" +
                 "SET\n" +
-                "`name` = ?,\n" +
-                "`description` = ?,\n" +
-                "`status` = ?,\n" +
-                "`releaseDate` = ?,\n" +
-                "`createdAt` = ?,\n" +
-                "`lastUpdatedAt` = ?\n" +
-                "WHERE `id` = ?;";
+                "name = ?,\n" +
+                "description = ?,\n" +
+                "status = ?,\n" +
+                "releaseDate = ?,\n" +
+                "lastUpdatedAt = ?\n" +
+                "WHERE id = ?;";
 
         try {
 
             jdbcTemplate.update(query, release.getName(), release.getDescription(), release.getStatus(),
-                    release.getReleaseDate(), release.getCreatedAt(), release.getLastUpdatedAt(), release.getId());
+                    release.getReleaseDate(),  release.getLastUpdatedAt(), id);
 
             return this.getRelease(id);
 
         } catch (DataAccessException e) {
             log.error(e.getMessage());
-            return null;
-        } catch (CustomException e) {
-            e.printStackTrace();
-            return null;
+            throw new CustomException(HttpStatus.FORBIDDEN, "Update failed.");
         }
     }
 

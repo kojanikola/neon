@@ -29,12 +29,12 @@ public class ReleaseControllerORM {
     }
 
     @GetMapping(value = "/releases/{id}")
-    public ResponseEntity<Release> getRelease(@PathVariable Integer id) {
+    public ResponseEntity<Release> getRelease(@PathVariable Integer id) throws CustomException {
         return new ResponseEntity(releaseService.getRelease(id), HttpStatus.OK);
     }
 
     @GetMapping(value = "/release")
-    public ResponseEntity<Release> getReleaseRequestParam(@RequestParam Integer id) {
+    public ResponseEntity<Release> getReleaseRequestParam(@RequestParam Integer id) throws CustomException {
         return new ResponseEntity(releaseService.getRelease(id), HttpStatus.OK);
     }
 
@@ -51,7 +51,7 @@ public class ReleaseControllerORM {
     }
 
     @DeleteMapping(value = "/releases/{id}")
-    public ResponseEntity<String> deleteRelease(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteRelease(@PathVariable Integer id) throws CustomException {
         return new ResponseEntity(releaseService.deleteRelease(id), HttpStatus.OK);
     }
 }

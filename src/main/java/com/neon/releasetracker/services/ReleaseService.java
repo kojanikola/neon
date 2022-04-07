@@ -30,7 +30,7 @@ public class ReleaseService {
         return releaseRepository.getRelease(id);
     }
 
-    public Release updateRelease(Integer id, Release release) {
+    public Release updateRelease(Integer id, Release release) throws CustomException {
         release.setLastUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return releaseRepository.updateRelease(id, release);
     }
