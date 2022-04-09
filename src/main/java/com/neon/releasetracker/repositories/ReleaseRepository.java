@@ -24,7 +24,7 @@ public class ReleaseRepository {
     private JdbcTemplate jdbcTemplate;
 
 
-    public Release newRelease(Release release) {
+    public Release newRelease(Release release) throws CustomException {
 
         String query = "INSERT INTO `releases` (`name`,`description`,`status`,`releaseDate`," +
                 "`createdAt`,`lastUpdatedAt`) VALUES ( ?, ?, ?, ?, ?, ?);";
@@ -45,17 +45,21 @@ public class ReleaseRepository {
 
             release.setId(keyHolder.getKey().intValue());
 
+            log.info("Success");
+
             return release;
 
         } catch (DataAccessException e) {
             log.error(e.getMessage());
-            return null;
+            throw new CustomException(HttpStatus.FORBIDDEN, "Could not insert release");
         }
     }
 
     public List<Release> getAllReleases() throws CustomException {
         try {
             String query = "SELECT * FROM `releases`;";
+
+            log.info("Running query " + query);
 
             return jdbcTemplate.query(query, (rs, rowNum) -> {
                 Release release = new Release();
@@ -69,6 +73,7 @@ public class ReleaseRepository {
                 return release;
             });
         } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage());
             throw new CustomException(HttpStatus.NOT_FOUND, "Currently no data in database.");
         }
     }
@@ -90,6 +95,7 @@ public class ReleaseRepository {
             }, id);
 
         } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage());
             throw new CustomException(HttpStatus.NOT_FOUND, "Release doesn't exists");
         }
     }
@@ -108,7 +114,9 @@ public class ReleaseRepository {
         try {
 
             jdbcTemplate.update(query, release.getName(), release.getDescription(), release.getStatus(),
-                    release.getReleaseDate(),  release.getLastUpdatedAt(), id);
+                    release.getReleaseDate(), release.getLastUpdatedAt(), id);
+
+            log.info("Success");
 
             return this.getRelease(id);
 
@@ -124,14 +132,39 @@ public class ReleaseRepository {
                 "WHERE `id`=?";
 
         try {
-
             getRelease(id);
 
             jdbcTemplate.update(query, id);
+
+            log.info("Success");
+
             return "successful";
         } catch (DataAccessException e) {
             log.error(e.getMessage());
             return "unsuccessful";
+        }
+    }
+
+    public List<Release> getAllReleasesFilter(String status) throws CustomException {
+        try {
+            String query = "SELECT * FROM `releases` WHERE `status`=?;";
+
+            log.info("Running query " + query);
+
+            return jdbcTemplate.query(query, (rs, rowNum) -> {
+                Release release = new Release();
+                release.setId(rs.getInt("id"));
+                release.setName(rs.getString("name"));
+                release.setDescription(rs.getString("description"));
+                release.setCreatedAt(rs.getTimestamp("createdAt"));
+                release.setReleaseDate(rs.getDate("releaseDate"));
+                release.setStatus(rs.getString("status"));
+                release.setLastUpdatedAt(rs.getTimestamp("lastUpdatedAt"));
+                return release;
+            }, status);
+        } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage());
+            throw new CustomException(HttpStatus.NOT_FOUND, "Currently no data in database.");
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.neon.releasetracker.validators;
 
 import com.neon.releasetracker.exceptions.CustomException;
-import com.neon.releasetracker.repositories.ReleaseRepository;
 import com.neon.releasetracker.repositories.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

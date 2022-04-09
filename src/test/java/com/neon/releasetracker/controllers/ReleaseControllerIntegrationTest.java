@@ -12,7 +12,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-import org.junit.jupiter.api.Assertions.*;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -58,41 +57,42 @@ public class ReleaseControllerIntegrationTest {
                 });
 
         assertEquals(1, releaseFromJson.size());
+        assertEquals(1, releaseFromJson.get(0).getId());
     }
 
     @Test
     public void getReleasesError() throws Exception {
-        MvcResult result = mockMvc.perform(get("/api/v1/releases/{id}",2)).andExpect(status().is4xxClientError()).andReturn();
+        MvcResult result = mockMvc.perform(get("/api/v1/releases/{id}", 2)).andExpect(status().is4xxClientError()).andReturn();
         String error = result.getResponse().getContentAsString();
 
-        assertEquals(error,"Release doesn't exists");
+        assertEquals(error, "Release doesn't exists");
     }
 
     @Test
-    public void newRelease(){
+    public void newRelease() {
         Release release = new Release(2, "Name 2", "Description 2", "In Development", new Date(System.currentTimeMillis()),
-                new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()));
+                new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
 
-        ResponseEntity<Release> createdRelease = testRestTemplate.postForEntity("/api/v1/releases",release, Release.class);
+        ResponseEntity<Release> createdRelease = testRestTemplate.postForEntity("/api/v1/releases", release, Release.class);
 
-        assertEquals(createdRelease.getBody().getId(),2);
+        assertEquals(createdRelease.getBody().getId(), 2);
     }
 
     @Test
-    public void newReleaseError(){
+    public void newReleaseError() {
         Release release = new Release(2, "Name 2", "Description 2", "In DevelopmentError", new Date(System.currentTimeMillis()),
-                new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()));
+                new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
 
-        ResponseEntity<String> message = testRestTemplate.postForEntity("/api/v1/releases",release, String.class);
+        ResponseEntity<String> message = testRestTemplate.postForEntity("/api/v1/releases", release, String.class);
 
         assertThat(message.getStatusCode().is4xxClientError());
-        assertEquals(message.getBody(),"Status not valid.");
+        assertEquals(message.getBody(), "Status not valid.");
     }
 
     @Test
     public void updateRelease() throws Exception {
         Release release = new Release(2, "Name 2", "Description 2", "In Development", new Date(System.currentTimeMillis()),
-                new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()));
+                new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
 
         MvcResult result = mockMvc.perform(put("/api/v1/releases/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,24 +121,24 @@ public class ReleaseControllerIntegrationTest {
 
         String message = result.getResponse().getContentAsString();
 
-        assertEquals(message,"Status not valid.");
+        assertEquals(message, "Status not valid.");
     }
 
     @Test
     public void deleteRelease() throws Exception {
 
-        MvcResult result =mockMvc.perform(delete("/api/v1/releases/{id}", 1))
+        MvcResult result = mockMvc.perform(delete("/api/v1/releases/{id}", 1))
                 .andExpect(status().isOk()).andReturn();
 
-        assertEquals(result.getResponse().getContentAsString(),"successful");
+        assertEquals(result.getResponse().getContentAsString(), "successful");
     }
 
     @Test
     public void deleteReleaseError() throws Exception {
 
-        MvcResult result =mockMvc.perform(delete("/api/v1/releases/{id}", 5))
+        MvcResult result = mockMvc.perform(delete("/api/v1/releases/{id}", 5))
                 .andExpect(status().is4xxClientError()).andReturn();
 
-        assertEquals(result.getResponse().getContentAsString(),"Release doesn't exists");
+        assertEquals(result.getResponse().getContentAsString(), "Release doesn't exists");
     }
 }

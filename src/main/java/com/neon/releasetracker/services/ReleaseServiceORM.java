@@ -1,7 +1,6 @@
 package com.neon.releasetracker.services;
 
 import com.neon.releasetracker.exceptions.CustomException;
-import com.neon.releasetracker.models.Release;
 import com.neon.releasetracker.models.ReleaseORM;
 import com.neon.releasetracker.repositories.ReleaseRepositoryORM;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReleaseServiceORM {

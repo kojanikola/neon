@@ -25,7 +25,7 @@ public class CustomExceptionHandler {
     @ResponseBody
     ResponseEntity<String> handleBadRequest(HttpServletRequest req, CustomException ex) {
         log.error(ex.getMessage());
-        return new ResponseEntity(ex.getMessage(),ex.getStatus());
+        return new ResponseEntity(ex.getMessage(), ex.getStatus());
     }
 
 }

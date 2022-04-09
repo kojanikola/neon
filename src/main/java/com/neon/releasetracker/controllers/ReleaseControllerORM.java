@@ -3,7 +3,6 @@ package com.neon.releasetracker.controllers;
 import com.neon.releasetracker.exceptions.CustomException;
 import com.neon.releasetracker.models.Release;
 import com.neon.releasetracker.models.ReleaseORM;
-import com.neon.releasetracker.services.ReleaseService;
 import com.neon.releasetracker.services.ReleaseServiceORM;
 import com.neon.releasetracker.validators.StatusValidator;
 import org.springframework.beans.factory.annotation.Autowired;
