@@ -49,7 +49,7 @@ public class ReleaseController {
     }
 
     @DeleteMapping(value="/releases/{id}")
-    public ResponseEntity<String> deleteRelease(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteRelease(@PathVariable Integer id) throws CustomException {
         return new ResponseEntity(releaseService.deleteRelease(id), HttpStatus.OK);
     }
 }

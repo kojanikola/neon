@@ -43,8 +43,6 @@ public class ReleaseRepository {
                 return ps;
             }, keyHolder);
 
-            log.info("" + keyHolder.getKeys().get("GENERATED_KEY"));
-
             release.setId(keyHolder.getKey().intValue());
 
             return release;
@@ -120,12 +118,15 @@ public class ReleaseRepository {
         }
     }
 
-    public String deleteRelease(Integer id) {
+    public String deleteRelease(Integer id) throws CustomException {
 
         String query = "DELETE FROM `releases`\n" +
                 "WHERE `id`=?";
 
         try {
+
+            getRelease(id);
+
             jdbcTemplate.update(query, id);
             return "successful";
         } catch (DataAccessException e) {

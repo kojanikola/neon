@@ -35,7 +35,7 @@ public class ReleaseService {
         return releaseRepository.updateRelease(id, release);
     }
 
-    public String deleteRelease(Integer id) {
+    public String deleteRelease(Integer id) throws CustomException {
         return releaseRepository.deleteRelease(id);
     }
 }

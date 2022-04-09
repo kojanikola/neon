@@ -2,6 +2,7 @@ package com.neon.releasetracker.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neon.releasetracker.controllers.ReleaseController;
 import com.neon.releasetracker.exceptions.CustomException;
 import com.neon.releasetracker.models.Release;
 import com.neon.releasetracker.repositories.ReleaseRepository;
@@ -218,6 +219,9 @@ class ReleaseControllerTest {
     }
 
     @Test
-    void deleteRelease() {
+    void deleteRelease() throws Exception {
+        Mockito.when(releaseService.deleteRelease(anyInt())).thenReturn("Successful");
+
+        mockMvc.perform(delete("/api/v1/releases/{id}", 1)).andExpect(status().isOk());
     }
 }
